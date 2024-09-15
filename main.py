@@ -1,10 +1,18 @@
 from PIL import Image
 from tqdm import tqdm
+import tkinter as tk
+from tkinter import filedialog
 
-
+ascii_depth = list(reversed(list("$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,^`'.")))
 
 def main():
-    im = Image.open("imgs/download.jpg")
+
+    root = tk.Tk()
+    root.withdraw()
+
+    file_path = filedialog.askopenfilename()
+
+    im = Image.open(file_path)
 
     output = open("out.txt", "w")
     content = ""
@@ -24,17 +32,15 @@ def main():
     print("Image parsing complete!")
 
 def get_asc(num:int)->str:
-    st = ""
-    if num >= 204:
-        st = " "
-    elif num >= 153:
-        st = "."
-    elif num >= 102:
-        st = "-"
-    elif num >= 51:
-        st = "="
-    else:
-        st = "#"
+    st = ascii_depth[len(ascii_depth)-1]
+    ascii_depth_len = len(ascii_depth)
+    step = int(255/ascii_depth_len)
+    lm = 255-step
+    for idx in range(ascii_depth_len):
+        if num >= lm:
+            st = ascii_depth[idx]
+            break;
+        lm -= step
     return st
 
 
